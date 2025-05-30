@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - main  # Trigger this workflow on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Node.js version for the build process (optional)
+
+      - name: Install dependencies
+        run: |
+          npm install  # or any dependencies needed for your project
+
+      - name: Build the project
+        run: |
+          npm run build  # build step if necessary
+
+      - name: Deploy to Jenkins
+        run: |
+          curl -X POST "http://localhost:8080/job/deploy-html/build?token=your_jenkins_token"
